@@ -634,7 +634,7 @@ class HiddenRole(Player):
                 await self.broadcast(game, discord.Embed(
                     title = "Pioche rafraichîe",
                     description = "La défausse a été mélangée et remise dans la pioche",
-                    color = 0xffffff
+                    color = 0xfffffe
                 ))
 
             #Pioche x cartes

@@ -15,8 +15,7 @@ class MainClass(BaseClassPython):
     help = {
         "description": "Module du jeu Nosferatu",
         "commands": {
-            "`{prefix}{command}`": "Démarre une partie de Nosferatu",
-            "`{prefix}{command} join`": "Rejoint la partie de Nosferatu",
+            "`{prefix}{command} join`": "Rejoint la partie de Nosferatu. S'il n'y en a pas dans le salon, en crée une nouvelle.",
             "`{prefix}{command} quit`": "Quitte la partie de Nosferatu",
             "`{prefix}{command} start`": "Démarre la partie de Nosferatu (réservé à Renfield)",
             "`{prefix}{command} nominate`": "Nomine un nouveau Renfield pour la partie de Nosferatu (réservé à Renfield). Cette fonction sera faite automatiquement en début de partie",
@@ -29,9 +28,20 @@ class MainClass(BaseClassPython):
     def __init__(self, client):
         super().__init__(client)
 
-    #Lancer la partie
-    async def command(self, message, args, kwargs):
-        if not message.channel.id in globals.games:
+    #Lancer/Rejoindre la partie
+    async def com_join(self, message, args, kwargs):
+        if message.channel.id in globals.games:
+            game = globals.games[message.channel.id]
+            if game["turn"] == -1:
+                if message.author.id in game["players"]:
+                    await message.channel.send("Tu es déjà dans la partie")
+                elif len(game["players"]) < 8:
+                    await message.channel.send("<@" + str(message.author.id) + "> rejoint la partie")
+
+                    game["players"][message.author.id] = Hunter(message.author)
+                else:
+                    await message.channel.send("Il y a déjà le nombre maximum de joueurs (8)")
+        else:
             embed = discord.Embed(title = "Démarrage de la partie de Nosferatu",
                                 description = "Tapez !nosferatu join pour rejoindre la partie",
                                 color = self.color)
@@ -61,24 +71,6 @@ class MainClass(BaseClassPython):
 
             for i in range(18):
                 globals.games[message.channel.id]["library"].append("journal")
-        else:
-            await message.channel.send("Il y a déjà une partie en cours")
-
-    #Rejoindre la partie
-    async def com_join(self, message, args, kwargs):
-        if message.channel.id in globals.games:
-            game = globals.games[message.channel.id]
-            if game["turn"] == -1:
-                if message.author.id in game["players"]:
-                    await message.channel.send("Tu es déjà dans la partie")
-                elif len(game["players"]) < 8:
-                    await message.channel.send("<@" + str(message.author.id) + "> rejoint la partie")
-
-                    game["players"][message.author.id] = Hunter(message.author)
-                else:
-                    await message.channel.send("Il y a déjà le nombre maximum de joueurs (8)")
-        else:
-            await message.channel.send("Il n'y a pas de partie en cours")
 
     #Quitter la partie
     async def com_quit(self, message, args, kwargs):
