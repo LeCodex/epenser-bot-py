@@ -187,12 +187,6 @@ class MainClass(BaseClassPython):
         else:
             await message.channel.send("Il n'y a pas de partie en cours")
 
-    async def com_end(self, message, args, kwargs):
-        if message.channel.id in globals.games:
-            game = globals.games[message.channel.id]
-            if globals.debug:
-                await game["players"][message.author.id].end_game(game)
-
 
     async def on_reaction_add(self, reaction, user):
         if not user.bot:

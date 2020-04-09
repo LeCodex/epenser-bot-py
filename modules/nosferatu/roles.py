@@ -306,7 +306,7 @@ class Renfield(Player):
             if total_bites == goal:
                 await self.broadcast(game, discord.Embed(
                     title = "**Victoire du Mal**",
-                    description = "`" + player.user.name + "` a été mordu! Le nombre requis de Morsures ont été jouées. Le Vampire, `" + [x for x in game["players"].values() if x.role == "Vampire"][0].user.name + "`, ayant désormais suffisamment d'influence, a neutralisé l'équipe des Chasseurs.\n**Le Mal a gagné!**",
+                    description = "Une dernière morsure à été jouée! Le nombre requis de Morsures ont été jouées. Le Vampire, `" + [x for x in game["players"].values() if x.role == "Vampire"][0].user.name + "`, ayant désormais suffisamment d'influence, a neutralisé l'équipe des Chasseurs.\n**Le Mal a gagné!**",
                     color = 0xff0000
                 ))
 
